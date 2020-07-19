@@ -34,6 +34,24 @@ fn main() {
     let s2 = String::from("hello");
     let s2 = takes_and_gives_back(s2);
     println!("{}, {}", s1, s2);
+
+    let s1 = String::from("hello");
+    println!("length is : {}", s1.len());
+    let len = calculate_length(&s1); // & 引用，允许使用值，但不获取其所有权
+
+    println!("The length of '{}' is {}.", s1, len); // 这里s1仍然是有效值
+
+    let mut s1 = String::from("Hello");
+    change(&mut s1);
+
+    println!("{}", s1);
+
+    // 在特定作用域中的特定数据只能有一个可变引用
+    // 所以以下代码编译会不通过
+    // let mut s = s1;
+    // let r1 = &mut s;
+    // let r2 = &mut s; 
+    // println!("{}, {}", r1, r2); 
 }
 
 fn takes_ownership(some_string: String) {
@@ -51,4 +69,19 @@ fn gives_overship() -> String {
 
 fn takes_and_gives_back(a_string: String) -> String {
     a_string
+}
+
+fn calculate_length(s: &String) -> usize { // s是一个引用类型
+    s.len()
+}// s并不拥有引用值的所有权，所以不会进行内存释放操作
+
+// 函数以引用值为参数，叫借用，
+// 借用值不能修改， 下面代码是错误的
+// fn change(s: &String) {
+//     s.push_str(", world!");
+// }
+
+// 可变引用可以修改引用值
+fn change(s: &mut String) {
+    s.push_str(", world!");
 }
