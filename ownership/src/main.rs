@@ -52,6 +52,19 @@ fn main() {
     // let r1 = &mut s;
     // let r2 = &mut s; 
     // println!("{}, {}", r1, r2); 
+
+    let mut s = String::from("hello world!");
+    let word = first_world(&s);
+    println!("{}", word);
+
+    let hello = &s[0..5];
+    let world = &s[6..11];
+    println!("{} {}", hello, world);
+
+    s.clear(); // 清空字符串
+    // 引用丢失
+    // println!("{}", word);
+    // println!("{} {}", hello, world);
 }
 
 fn takes_ownership(some_string: String) {
@@ -84,4 +97,16 @@ fn calculate_length(s: &String) -> usize { // s是一个引用类型
 // 可变引用可以修改引用值
 fn change(s: &mut String) {
     s.push_str(", world!");
+}
+
+fn first_world(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
 }
