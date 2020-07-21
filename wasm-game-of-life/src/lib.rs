@@ -149,6 +149,14 @@ impl Universe {
         let idx = self.get_index(row, col);
         self.cells[idx].toggle();
     }
+
+    pub fn get_width(&self) -> u32 {
+        self.width
+    }
+
+    pub  fn get_height(&self) -> u32 {
+        self.height
+    }
 }
 
 use std::fmt;

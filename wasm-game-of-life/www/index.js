@@ -32,9 +32,13 @@ js.then(({ Universe }) => {
 
     pre.addEventListener('click', (event) => {
         const rect = pre.getBoundingClientRect();
-        const x = ~~((event.clientX - pre.offsetLeft) / 11);
-        const y = ~~((event.clientY -pre.offsetTop) / 11);
-        universe.toggle_cell(x, y);
+        const xScale = rect.width / universe.get_width()
+        const yScale = rect.height / universe.get_height()
+
+        const col = Math.floor((event.clientX - rect.left) / xScale);
+        const row = Math.floor((event.clientY - rect.top) / yScale);
+
+        universe.toggle_cell(row, col);
         pre.textContent = universe.render();
     })
 
