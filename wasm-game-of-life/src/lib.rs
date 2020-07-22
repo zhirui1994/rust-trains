@@ -73,6 +73,8 @@ impl Universe {
     }
 }
 
+
+
 #[wasm_bindgen]
 impl Universe {
     pub fn tick(&mut self) {
@@ -156,6 +158,31 @@ impl Universe {
 
     pub  fn get_height(&self) -> u32 {
         self.height
+    }
+
+    // 添加一个滑翔机
+    pub fn add_glider(&mut self, row: u32, col: u32) {
+        for delta_row in [self.height - 1, 0, 1].iter().cloned() {
+            for delta_col in [self.width - 1, 0, 1].iter().cloned() {
+                let neighbor_row = (row + delta_row) % self.height;
+                let neighbor_col = (col + delta_col) % self.width;
+                let idx = self.get_index(neighbor_row, neighbor_col);
+
+                if
+                    delta_col == 1 ||
+                    (delta_col == 0 && delta_row == 1 ) ||
+                    (delta_col == self.width - 1 && delta_row == 0)
+                {
+                    self.cells[idx] = Cell::Alive;
+                }
+                    else
+                {
+                    self.cells[idx] = Cell::Dead;
+                }
+            }
+        }
+
+
     }
 }
 

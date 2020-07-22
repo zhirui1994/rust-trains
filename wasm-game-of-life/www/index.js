@@ -19,6 +19,7 @@ js.then(({ Universe }) => {
     const pause = () => {
         btn.textContent =  "▶";
         cancelAnimationFrame(animationId);
+        pre.textContent = universe.render();
         animationId = null;
     }
 
@@ -38,7 +39,12 @@ js.then(({ Universe }) => {
         const col = Math.floor((event.clientX - rect.left) / xScale);
         const row = Math.floor((event.clientY - rect.top) / yScale);
 
-        universe.toggle_cell(row, col);
+        if (event.ctrlKey) {
+            universe.add_glider(row, col);
+        } else {
+            universe.toggle_cell(row, col);
+        }
+
         pre.textContent = universe.render();
     })
 
