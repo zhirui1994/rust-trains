@@ -1,22 +1,21 @@
 use std::env;
-use std::fs::File;
-use std::io::prelude::*;
+use std::process;
+
+extern crate minigrep;
+use minigrep::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let query = &args[1];
-    let filename = &args[2];
-    println!("Search for {}", query);
-    println!("In file {}", filename);
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
 
-    let mut contents = String::new();
-    File::open(filename)
-        .expect("File not found!")
-        .read_to_string(&mut contents)
-        .expect(
-            &format!("Something went wrong reading the file {}", filename)
-        );
-    
-    println!("With text:\n{}", contents);
+    println!("Search for {}", config.query);
+    println!("In file {}", config.filename);
 
+    if let Err(e) = run(config) {
+        println!("Application error: {}", e);
+        process::exit(1);
+    }
 }
