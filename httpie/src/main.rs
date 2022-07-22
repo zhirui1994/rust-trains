@@ -1,4 +1,6 @@
 use clap::{Parser, Subcommand, Args};
+use reqwest::Url;
+use anyhow::Result;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -15,7 +17,7 @@ enum Action {
 
 #[derive(Args, Debug)]
 struct Post {
-  #[clap(value_parser)]
+  #[clap(parse(try_from_str = parse_url))]
   url: String,
 
   #[clap(value_parser)]
@@ -24,8 +26,14 @@ struct Post {
 
 #[derive(Args, Debug)]
 struct Get {
-  #[clap(value_parser)]
+  #[clap(parse(try_from_str = parse_url))]
   url: String,
+}
+
+fn parse_url(url: &str) -> Result<String> {
+  let _url: Url = url.parse()?;
+
+  Ok(url.into())
 }
 
 fn main() {
