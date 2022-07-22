@@ -1,6 +1,8 @@
+use std::str::FromStr;
+
 use clap::{Parser, Subcommand, Args};
 use reqwest::Url;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -20,8 +22,8 @@ struct Post {
   #[clap(parse(try_from_str = parse_url))]
   url: String,
 
-  #[clap(value_parser)]
-  body: Vec<String>,
+  #[clap(parse(try_from_str = parse_kv_pair))]
+  body: Vec<KvPair>,
 }
 
 #[derive(Args, Debug)]
@@ -30,10 +32,33 @@ struct Get {
   url: String,
 }
 
-fn parse_url(url: &str) -> Result<String> {
-  let _url: Url = url.parse()?;
+#[derive(Debug)]
+struct KvPair {
+  k: String,
+  v: String,
+}
 
-  Ok(url.into())
+impl FromStr for KvPair {
+  type Err = anyhow::Error;
+
+  fn from_str(s: &str) -> Result<KvPair, Self::Err> {
+    let mut split = s.split("=");
+    let err = || anyhow!(format!("Faild to parse {}", s));
+    Ok(Self {
+      k: (split.next().ok_or_else(err)?).to_string(),
+      v: (split.next().ok_or_else(err)?).to_string(),
+    })
+  }
+}
+
+fn parse_url(s: &str) -> Result<String> {
+  let _url: Url = s.parse()?;
+
+  Ok(s.into())
+}
+
+fn parse_kv_pair(s: &str) -> Result<KvPair> {
+  Ok(s.parse()?)
 }
 
 fn main() {
