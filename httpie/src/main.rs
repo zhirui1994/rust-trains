@@ -34,7 +34,7 @@ struct Get {
   url: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct KvPair {
   k: String,
   v: String,
@@ -127,4 +127,35 @@ async fn main() -> Result<()> {
   };
 
   Ok(result)
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn parse_url_works() {
+    assert!(parse_url("abc").is_err());
+    assert!(parse_url("http://abc.xyz").is_ok());
+    assert!(parse_url("https://pie.dev/post").is_ok())
+  }
+
+  #[test]
+  fn parse_kv_pair_works() {
+    assert!(parse_kv_pair("s").is_err());
+    assert!(parse_kv_pair("a=1").is_ok());
+    assert_eq!(
+      parse_kv_pair("a=1").unwrap(),
+     KvPair {
+      k: "a".into(),
+      v: "1".into()
+    });
+    assert_eq!(
+      parse_kv_pair("b=").unwrap(),
+     KvPair {
+      k: "b".into(),
+      v: "".into()
+    });
+  }
 }
