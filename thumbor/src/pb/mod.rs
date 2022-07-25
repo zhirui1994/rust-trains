@@ -24,3 +24,30 @@ impl TryFrom<&str> for ImageSpec {
         Ok(ImageSpec::decode(&data[..])?)
     }
 }
+
+impl Spec {
+    pub fn new_resize(width: u32, height: u32, filter: resize::SampleFilter) -> Self {
+        Self {
+            data: Some(spec::Data::Resize(Resize {
+                width,
+                height,
+                rtype: resize::ResizeType::Normal as i32,
+                filter: filter as i32
+            }))
+        }
+    }
+
+    pub fn new_watermark(x: u32, y: u32) -> Self {
+        Self { 
+            data: Some(spec::Data::Watermark(Watermark {x, y}))
+        }
+    }
+
+    pub fn new_filter(filter: filter::Filter) -> Self {
+        Self {
+            data: Some(spec::Data::Filter(Filter {
+                filter: filter as i32,
+            }))
+        }
+    }
+}
