@@ -29,7 +29,16 @@ fn main() {
     };
 
     println!("The erea of rectangle is {} squre pixels.", rect.area());
-    println!("Rectangle is {:?}", rect)
+    println!("Rectangle is {:?}", rect);
+
+    let s1:String = "s".into();
+    let s2 = "s".to_string();
+    let mut s3 = String::new();
+    s3.insert_str(0, "s");
+
+    println!("{}", s1 == s2);
+    println!("{}", s2 == s3);
+
 }
 
 #[derive(Debug)] // 实现了Debug trait才能通过debug模式打印
